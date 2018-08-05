@@ -14,8 +14,10 @@
 
 @section('content')
     <div class="container">
-        Aqui vai ser a administração
+        yo
     </div>
+    <passport-clients></passport-clients>
+
 @endsection
 
 @section('pagescript')

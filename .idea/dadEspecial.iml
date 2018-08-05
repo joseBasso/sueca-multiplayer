@@ -5,6 +5,7 @@
       <sourceFolder url="file://$MODULE_DIR$/laravel_server/app" isTestSource="false" packagePrefix="App\" />
       <sourceFolder url="file://$MODULE_DIR$/laravel_server/tests" isTestSource="true" packagePrefix="Tests\" />
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/defuse/php-encryption" />
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/dnoegel/php-xdg-base-dir" />
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/doctrine/inflector" />
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/doctrine/instantiator" />
@@ -14,13 +15,21 @@
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/erusev/parsedown" />
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/fideloper/proxy" />
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/filp/whoops" />
+      <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/firebase/php-jwt" />
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/fzaninotto/faker" />
+      <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/guzzlehttp/guzzle" />
+      <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/guzzlehttp/promises" />
+      <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/guzzlehttp/psr7" />
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/hamcrest/hamcrest-php" />
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/jakub-onderka/php-console-color" />
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/jakub-onderka/php-console-highlighter" />
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/laravel/framework" />
+      <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/laravel/passport" />
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/laravel/tinker" />
+      <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/lcobucci/jwt" />
+      <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/league/event" />
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/league/flysystem" />
+      <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/league/oauth2-server" />
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/mockery/mockery" />
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/monolog/monolog" />
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/myclabs/deep-copy" />
@@ -33,6 +42,7 @@
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/phpdocumentor/reflection-common" />
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/phpdocumentor/reflection-docblock" />
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/phpdocumentor/type-resolver" />
+      <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/phpseclib/phpseclib" />
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/phpspec/prophecy" />
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/phpunit/php-code-coverage" />
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/phpunit/php-file-iterator" />
@@ -41,6 +51,7 @@
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/phpunit/php-token-stream" />
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/phpunit/phpunit" />
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/psr/container" />
+      <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/psr/http-message" />
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/psr/log" />
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/psr/simple-cache" />
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/psy/psysh" />
@@ -68,6 +79,7 @@
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/symfony/polyfill-mbstring" />
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/symfony/polyfill-php72" />
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/symfony/process" />
+      <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/symfony/psr-http-message-bridge" />
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/symfony/routing" />
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/symfony/translation" />
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/symfony/var-dumper" />
@@ -75,6 +87,7 @@
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/tijsverkoyen/css-to-inline-styles" />
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/vlucas/phpdotenv" />
       <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/webmozart/assert" />
+      <excludeFolder url="file://$MODULE_DIR$/laravel_server/vendor/zendframework/zend-diactoros" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
