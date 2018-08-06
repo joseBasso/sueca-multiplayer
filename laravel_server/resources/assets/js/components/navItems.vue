@@ -1,0 +1,20 @@
+<template>
+
+    <b-navbar-nav v-if="this.$root.userAuthed == false">
+        <b-nav-item><router-link to="/login" tag="button">Login</router-link></b-nav-item>
+        <b-nav-item><router-link to="/register" tag="button">Register</router-link></b-nav-item>
+    </b-navbar-nav>
+
+    <b-navbar-nav v-else>
+        <b-nav-item href="#">Account</b-nav-item>
+        <b-nav-item href="#">Statistics</b-nav-item>
+        <b-nav-item href="#">Lobby</b-nav-item>
+        <b-nav-item href="#">Game</b-nav-item>
+    </b-navbar-nav>
+
+</template>
+
+<script>
+    export default {
+    }
+</script>

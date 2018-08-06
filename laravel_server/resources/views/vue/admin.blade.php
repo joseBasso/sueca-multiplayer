@@ -16,7 +16,6 @@
     <div class="container">
         yo
     </div>
-    <passport-clients></passport-clients>
 
 @endsection
 

@@ -22,6 +22,8 @@ Vue.use(VueRouter);
 
 const login = Vue.component('login', require('./components/login.vue'));
 const register = Vue.component('register', require('./components/register.vue'));
+const navItems = Vue.component('nav-items', require('./components/navItems.vue'));
+
 
 
 const routes = [
@@ -35,5 +37,22 @@ const router = new VueRouter({
 
 const app = new Vue({
     router,
-    el: '#app'
+    el: '#app',
+    data: {
+        userAuthed: false
+    },
+    methods: {
+        isAuthed() {
+            if(window.localStorage.getItem('access_token')){
+                this.userAuthed = true;
+            }else{
+                this.userAuthed = false;
+            }
+        }
+    },
+    created()
+    {
+        this.isAuthed()
+    },
+
 });

@@ -84604,6 +84604,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_3_vue_
 
 var login = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('login', __webpack_require__(227));
 var register = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('register', __webpack_require__(230));
+var navItems = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('nav-items', __webpack_require__(233));
 
 var routes = [{ path: '/login', component: login }, { path: '/register', component: register }];
 
@@ -84613,7 +84614,22 @@ var router = new __WEBPACK_IMPORTED_MODULE_3_vue_router__["a" /* default */]({
 
 var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
     router: router,
-    el: '#app'
+    el: '#app',
+    data: {
+        userAuthed: false
+    },
+    methods: {
+        isAuthed: function isAuthed() {
+            if (window.localStorage.getItem('access_token')) {
+                this.userAuthed = true;
+            } else {
+                this.userAuthed = false;
+            }
+        }
+    },
+    created: function created() {
+        this.isAuthed();
+    }
 });
 
 /***/ }),
@@ -87338,10 +87354,41 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    mounted: function mounted() {
-        console.log('Component mounted.');
+    data: function data() {
+        return {
+            user: {
+                email: null,
+                password: null
+            },
+            showError: false,
+            errorMessage: ''
+        };
+    },
+    methods: {
+        login: function login(user) {
+            var _this = this;
+
+            var self = this;
+            axios.post('/api/login', { email: user.email, password: user.password }).then(function (response) {
+                window.localStorage.setItem("access_token", response.data.token_type + ' ' + response.data.access_token);
+                self.showError = false;
+                self.$root.userAuthed = true;
+                self.$router.push('account');
+            }).catch(function (error) {
+                _this.showError = true;
+                _this.errorMessage = error.response.data.message;
+            });
+        }
     }
 });
 
@@ -87376,6 +87423,14 @@ var render = function() {
                 [
                   _c(
                     "form",
+                    {
+                      on: {
+                        submit: function($event) {
+                          $event.preventDefault()
+                          _vm.login(_vm.user)
+                        }
+                      }
+                    },
                     [
                       _c(
                         "v-layout",
@@ -87392,6 +87447,13 @@ var render = function() {
                                   id: "email",
                                   type: "email",
                                   required: ""
+                                },
+                                model: {
+                                  value: _vm.user.email,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.user, "email", $$v)
+                                  },
+                                  expression: "user.email"
                                 }
                               })
                             ],
@@ -87409,10 +87471,35 @@ var render = function() {
                                   id: "password",
                                   type: "password",
                                   required: ""
+                                },
+                                model: {
+                                  value: _vm.user.password,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.user, "password", $$v)
+                                  },
+                                  expression: "user.password"
                                 }
                               })
                             ],
                             1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "v-alert",
+                            {
+                              attrs: {
+                                value: _vm.showError,
+                                type: "error",
+                                outline: ""
+                              }
+                            },
+                            [
+                              _vm._v(
+                                "\n                            " +
+                                  _vm._s(_vm.errorMessage) +
+                                  "\n                        "
+                              )
+                            ]
                           ),
                           _vm._v(" "),
                           _c(
@@ -87424,7 +87511,13 @@ var render = function() {
                             [
                               _c(
                                 "v-btn",
-                                { attrs: { dark: "", type: "submit" } },
+                                {
+                                  attrs: {
+                                    disabled: !_vm.valid,
+                                    dark: "",
+                                    type: "submit"
+                                  }
+                                },
                                 [_vm._v("Login")]
                               )
                             ],
@@ -87578,10 +87671,53 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    mounted: function mounted() {
-        console.log('Component mounted.');
+    data: function data() {
+        var _this = this;
+
+        return {
+            user: {
+                email: null,
+                password: null,
+                name: null,
+                nickname: null
+            },
+            confirmationPassword: null,
+            emailRules: [function (v) {
+                return !!v || 'Email is required';
+            }, function (v) {
+                return (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
+                );
+            }],
+            nicknameRules: [function (v) {
+                return !!v || 'Nickname is required';
+            }, function (v) {
+                return v.length <= 15 || 'Nickname must be less than 15 characters';
+            }],
+            passwordRules: [function (v) {
+                return v == _this.user.password || 'Password confirmation must match password';
+            }]
+        };
+    },
+    methods: {
+        register: function register(user) {
+            var self = this;
+            axios.post('/api/register', { email: user.email, password: user.password, name: user.name, nickname: user.nickname }).then(function (response) {
+                self.$router.push('login');
+                console.log(response);
+            }).catch(function (error) {});
+        }
     }
 });
 
@@ -87610,121 +87746,177 @@ var render = function() {
                 [_c("h1", [_vm._v("Register")])]
               ),
               _vm._v(" "),
-              _c("v-flex", { attrs: { xs12: "", sm6: "", "offset-sm3": "" } }, [
-                _c(
-                  "form",
-                  [
-                    _c(
-                      "v-layout",
-                      { attrs: { column: "" } },
-                      [
-                        _c(
-                          "v-flex",
-                          [
-                            _c("v-text-field", {
-                              attrs: {
-                                "prepend-icon": "person",
-                                name: "Name",
-                                label: "Full name",
-                                id: "name",
-                                type: "text",
-                                required: ""
-                              }
-                            })
-                          ],
-                          1
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "v-flex",
-                          [
-                            _c("v-text-field", {
-                              attrs: {
-                                "prepend-icon": "email",
-                                name: "email",
-                                label: "Email",
-                                id: "email",
-                                type: "email",
-                                required: ""
-                              }
-                            })
-                          ],
-                          1
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "v-flex",
-                          [
-                            _c("v-text-field", {
-                              attrs: {
-                                "prepend-icon": "person_outline",
-                                name: "nickname",
-                                label: "Nickname",
-                                id: "nickname",
-                                type: "text",
-                                required: ""
-                              }
-                            })
-                          ],
-                          1
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "v-flex",
-                          [
-                            _c("v-text-field", {
-                              attrs: {
-                                "prepend-icon": "lock",
-                                name: "password",
-                                label: "Password",
-                                id: "password",
-                                type: "password",
-                                required: ""
-                              }
-                            })
-                          ],
-                          1
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "v-flex",
-                          [
-                            _c("v-text-field", {
-                              attrs: {
-                                "prepend-icon": "check_circle",
-                                name: "confirmPassword",
-                                label: "Confirm Password",
-                                id: "confirmPassword",
-                                type: "password",
-                                required: ""
-                              }
-                            })
-                          ],
-                          1
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "v-flex",
-                          {
-                            staticClass: "text-xs-center",
-                            attrs: { "mt-2": "" }
-                          },
-                          [
-                            _c(
-                              "v-btn",
-                              { attrs: { dark: "", type: "submit" } },
-                              [_vm._v("Login")]
-                            )
-                          ],
-                          1
-                        )
-                      ],
-                      1
-                    )
-                  ],
-                  1
-                )
-              ])
+              _c(
+                "v-flex",
+                { attrs: { xs12: "", sm6: "", "offset-sm3": "" } },
+                [
+                  _c(
+                    "v-form",
+                    {
+                      on: {
+                        submit: function($event) {
+                          $event.preventDefault()
+                          _vm.register(_vm.user)
+                        }
+                      }
+                    },
+                    [
+                      _c(
+                        "v-layout",
+                        { attrs: { column: "" } },
+                        [
+                          _c(
+                            "v-flex",
+                            [
+                              _c("v-text-field", {
+                                attrs: {
+                                  "prepend-icon": "person",
+                                  name: "Name",
+                                  label: "Full name",
+                                  id: "name",
+                                  type: "text",
+                                  required: ""
+                                },
+                                model: {
+                                  value: _vm.user.name,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.user, "name", $$v)
+                                  },
+                                  expression: "user.name"
+                                }
+                              })
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "v-flex",
+                            [
+                              _c("v-text-field", {
+                                attrs: {
+                                  "prepend-icon": "email",
+                                  name: "email",
+                                  label: "Email",
+                                  id: "email",
+                                  type: "email",
+                                  rules: _vm.emailRules,
+                                  required: ""
+                                },
+                                model: {
+                                  value: _vm.user.email,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.user, "email", $$v)
+                                  },
+                                  expression: "user.email"
+                                }
+                              })
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "v-flex",
+                            [
+                              _c("v-text-field", {
+                                attrs: {
+                                  "prepend-icon": "person_outline",
+                                  name: "nickname",
+                                  label: "Nickname",
+                                  id: "nickname",
+                                  type: "text",
+                                  rules: _vm.nicknameRules,
+                                  counter: 15,
+                                  required: ""
+                                },
+                                model: {
+                                  value: _vm.user.nickname,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.user, "nickname", $$v)
+                                  },
+                                  expression: "user.nickname"
+                                }
+                              })
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "v-flex",
+                            [
+                              _c("v-text-field", {
+                                attrs: {
+                                  "prepend-icon": "lock",
+                                  name: "password",
+                                  label: "Password",
+                                  id: "password",
+                                  type: "password",
+                                  required: ""
+                                },
+                                model: {
+                                  value: _vm.user.password,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.user, "password", $$v)
+                                  },
+                                  expression: "user.password"
+                                }
+                              })
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "v-flex",
+                            [
+                              _c("v-text-field", {
+                                attrs: {
+                                  "prepend-icon": "check_circle",
+                                  name: "confirmPassword",
+                                  label: "Confirm Password",
+                                  id: "confirmPassword",
+                                  type: "password",
+                                  rules: _vm.passwordRules,
+                                  required: ""
+                                },
+                                model: {
+                                  value: _vm.user.confirmationPassword,
+                                  callback: function($$v) {
+                                    _vm.$set(
+                                      _vm.user,
+                                      "confirmationPassword",
+                                      $$v
+                                    )
+                                  },
+                                  expression: "user.confirmationPassword"
+                                }
+                              })
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "v-flex",
+                            {
+                              staticClass: "text-xs-center",
+                              attrs: { "mt-2": "" }
+                            },
+                            [
+                              _c(
+                                "v-btn",
+                                { attrs: { dark: "", type: "submit" } },
+                                [_vm._v("Register")]
+                              )
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
             ],
             1
           )
@@ -87742,6 +87934,136 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-79ef4a3a", module.exports)
+  }
+}
+
+/***/ }),
+/* 233 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(220)
+/* script */
+var __vue_script__ = __webpack_require__(234)
+/* template */
+var __vue_template__ = __webpack_require__(235)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/navItems.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-2b6e3af4", Component.options)
+  } else {
+    hotAPI.reload("data-v-2b6e3af4", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 234 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({});
+
+/***/ }),
+/* 235 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return this.$root.userAuthed == false
+    ? _c(
+        "b-navbar-nav",
+        [
+          _c(
+            "b-nav-item",
+            [
+              _c("router-link", { attrs: { to: "/login", tag: "button" } }, [
+                _vm._v("Login")
+              ])
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "b-nav-item",
+            [
+              _c("router-link", { attrs: { to: "/register", tag: "button" } }, [
+                _vm._v("Register")
+              ])
+            ],
+            1
+          )
+        ],
+        1
+      )
+    : _c(
+        "b-navbar-nav",
+        [
+          _c("b-nav-item", { attrs: { href: "#" } }, [_vm._v("Account")]),
+          _vm._v(" "),
+          _c("b-nav-item", { attrs: { href: "#" } }, [_vm._v("Statistics")]),
+          _vm._v(" "),
+          _c("b-nav-item", { attrs: { href: "#" } }, [_vm._v("Lobby")]),
+          _vm._v(" "),
+          _c("b-nav-item", { attrs: { href: "#" } }, [_vm._v("Game")])
+        ],
+        1
+      )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-2b6e3af4", module.exports)
   }
 }
 
