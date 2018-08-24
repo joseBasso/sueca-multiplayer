@@ -84606,8 +84606,9 @@ var login = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('login', __web
 var register = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('register', __webpack_require__(230));
 var navItems = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('nav-items', __webpack_require__(233));
 var userProfile = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('user-profile', __webpack_require__(236));
+var lobby = __WEBPACK_IMPORTED_MODULE_0_vue___default.a.component('lobby', __webpack_require__(243));
 
-var routes = [{ path: '/login', component: login }, { path: '/register', component: register }, { path: '/account', component: userProfile }];
+var routes = [{ path: '/login', component: login }, { path: '/register', component: register }, { path: '/account', component: userProfile }, { path: '/statistics', component: userStatistics }, { path: '/lobby', component: lobby }];
 
 var router = new __WEBPACK_IMPORTED_MODULE_3_vue_router__["a" /* default */]({
     routes: routes
@@ -88102,7 +88103,17 @@ var render = function() {
             1
           ),
           _vm._v(" "),
-          _c("b-nav-item", { attrs: { href: "#" } }, [_vm._v("Statistics")]),
+          _c(
+            "b-nav-item",
+            [
+              _c(
+                "router-link",
+                { attrs: { to: "/statistics", tag: "button" } },
+                [_vm._v("Statistics")]
+              )
+            ],
+            1
+          ),
           _vm._v(" "),
           _c("b-nav-item", { attrs: { href: "#" } }, [_vm._v("Lobby")]),
           _vm._v(" "),
@@ -88566,6 +88577,125 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-44a84817", module.exports)
+  }
+}
+
+/***/ }),
+/* 239 */,
+/* 240 */,
+/* 241 */,
+/* 242 */,
+/* 243 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(74)
+/* script */
+var __vue_script__ = __webpack_require__(244)
+/* template */
+var __vue_template__ = __webpack_require__(245)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/lobby.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-55a2694f", Component.options)
+  } else {
+    hotAPI.reload("data-v-55a2694f", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 244 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    mounted: function mounted() {
+        console.log('Component mounted.');
+    }
+});
+
+/***/ }),
+/* 245 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "container" }, [
+      _c("div", { staticClass: "row justify-content-center" }, [
+        _c("div", { staticClass: "col-md-8" }, [
+          _c("div", { staticClass: "card card-default" }, [
+            _c("div", { staticClass: "card-header" }, [_vm._v("Lobby")]),
+            _vm._v(" "),
+            _c("div", { staticClass: "card-body" }, [
+              _vm._v("\n                    Lobby\n                ")
+            ])
+          ])
+        ])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-55a2694f", module.exports)
   }
 }
 
