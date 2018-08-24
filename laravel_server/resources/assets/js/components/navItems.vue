@@ -6,7 +6,7 @@
     </b-navbar-nav>
 
     <b-navbar-nav v-else>
-        <b-nav-item href="#">Account</b-nav-item>
+        <b-nav-item><router-link to="/account" tag="button">Account</router-link></b-nav-item>
         <b-nav-item href="#">Statistics</b-nav-item>
         <b-nav-item href="#">Lobby</b-nav-item>
         <b-nav-item href="#">Game</b-nav-item>

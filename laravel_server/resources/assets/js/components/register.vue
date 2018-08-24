@@ -17,6 +17,7 @@
                                         type="text"
                                         v-model="user.name"
                                         required></v-text-field>
+                                <span class="red--text" v-if="showError && errorMessages['name']"> {{errorMessages['name'][0]}} </span>
                             </v-flex>
                             <v-flex>
                                 <v-text-field
@@ -28,6 +29,7 @@
                                         :rules="emailRules"
                                         v-model="user.email"
                                         required></v-text-field>
+                                <span class="red--text" v-if="showError && errorMessages['email']"> {{errorMessages['email'][0]}} </span>
                             </v-flex>
                             <v-flex>
                                 <v-text-field
@@ -40,6 +42,7 @@
                                         :counter="15"
                                         v-model="user.nickname"
                                         required></v-text-field>
+                                <span class="red--text" v-if="showError && errorMessages['nickname']"> {{errorMessages['nickname'][0]}} </span>
                             </v-flex>
                             <v-flex>
                                 <v-text-field
@@ -50,6 +53,7 @@
                                         type="password"
                                         v-model="user.password"
                                         required></v-text-field>
+                                <span class="red--text" v-if="showError && errorMessages['password']"> {{errorMessages['password'][0]}} </span>
                             </v-flex>
                             <v-flex>
                                 <v-text-field
@@ -59,10 +63,11 @@
                                         id="confirmPassword"
                                         type="password"
                                         :rules="passwordRules"
-                                        v-model="user.confirmationPassword"
+                                        v-model="password_confirmation"
                                         required
                                 ></v-text-field>
                             </v-flex>
+
                             <v-flex class="text-xs-center" mt-2>
                                 <v-btn dark type="submit">Register</v-btn>
                             </v-flex>
@@ -75,17 +80,18 @@
 </template>
 
 <script>
-
     export default {
         data: function () {
             return {
+                showError: false,
+                errorMessages: null,
                 user: {
                     email: null,
                     password: null,
                     name:null,
                     nickname:null
                 },
-                confirmationPassword: null,
+                password_confirmation: null,
                 emailRules: [
                     v => !!v || 'Email is required',
                     (v) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
@@ -106,9 +112,10 @@
                 axios.post('/api/register', {email: user.email, password: user.password, name: user.name, nickname: user.nickname})
                     .then(function(response){
                         self.$router.push('login');
-                        console.log(response);
+                        this.showError = false;
                     }).catch(error => {
-
+                    this.showError = true;
+                    this.errorMessages = error.response.data.errors;
                 });
 
             }

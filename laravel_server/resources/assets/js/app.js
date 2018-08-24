@@ -23,12 +23,12 @@ Vue.use(VueRouter);
 const login = Vue.component('login', require('./components/login.vue'));
 const register = Vue.component('register', require('./components/register.vue'));
 const navItems = Vue.component('nav-items', require('./components/navItems.vue'));
-
-
+const userProfile = Vue.component('user-profile', require('./components/userProfile.vue'));
 
 const routes = [
     { path: '/login', component:login },
-    { path: '/register', component:register }
+    { path: '/register', component:register },
+    { path: '/account', component:userProfile }
 ];
 
 const router = new VueRouter({

@@ -22,3 +22,4 @@ Route::post('register', 'UserController@store');
 Route::post('login', 'LoginControllerAPI@login');
 Route::post('admin/login', 'LoginControllerAPI@loginAdmin');
 Route::middleware('auth:api')->post('logout', 'LoginControllerAPI@logout');
+Route::middleware('auth:api')->put('users/{id}', 'UserController@update');
