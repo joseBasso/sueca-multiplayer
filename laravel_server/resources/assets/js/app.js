@@ -4,7 +4,7 @@ require('./bootstrap');
 import Vue from 'vue';
 import BootstrapVue from 'bootstrap-vue';
 import Vuetify from 'vuetify';
-//import VueSocketio from 'vue-socket.io';
+import VueSocketio from 'vue-socket.io';
 import VueRouter from 'vue-router';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -12,7 +12,7 @@ import 'vuetify/dist/vuetify.min.css';
 
 Vue.use(Vuetify);
 Vue.use(BootstrapVue);
-//Vue.use(VueSocketio, 'http://192.168.10.10:8080');
+Vue.use(VueSocketio, 'http://192.168.10.10:8080');
 Vue.use(VueRouter);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -24,6 +24,8 @@ const login = Vue.component('login', require('./components/login.vue'));
 const register = Vue.component('register', require('./components/register.vue'));
 const navItems = Vue.component('nav-items', require('./components/navItems.vue'));
 const userProfile = Vue.component('user-profile', require('./components/userProfile.vue'));
+const userStatistics = Vue.component('user-statistics', require('./components/userStatistics.vue'));
+
 const lobby = Vue.component('lobby', require('./components/lobby.vue'));
 
 
