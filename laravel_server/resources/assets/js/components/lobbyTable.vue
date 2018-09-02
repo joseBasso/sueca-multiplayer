@@ -17,12 +17,12 @@
             <tr v-for="game in games"  :key="game.gameID">
                 <td>{{ game.gameID }}</td>
                 <td>{{ game.owner }}</td>
-                <td>{{ game.created_at.date }}</td>
+                <td>{{ game.created_at }}</td>
                 <td>{{ game.joinedPlayers }}/4</td>
                 <td>
-                    <button v-if="game.owner == user && isRoomFull(game)" class="btn btn-danger" @click.prevent="start(game)">Start</button>
-                    <button v-if="alreadyJoined(game)" class="btn btn-danger" @click.prevent="leave(game)">Leave</button>
-                    <button v-if="!alreadyJoined(game)" class="btn btn-danger" @click.prevent="join(game)" >Join</button>
+                    <v-btn color="success" outline small round v-if="game.owner == user && isRoomFull(game)"  @click.prevent="start(game)">Start</v-btn>
+                    <v-btn color="error" outline small round v-if="alreadyJoined(game)" @click.prevent="leave(game)">Leave</v-btn>
+                    <v-btn color="primary" outline small round v-if="!alreadyJoined(game)" @click.prevent="join(game)" >Join</v-btn>
                 </td>
             </tr>
             </tbody>

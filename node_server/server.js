@@ -21,7 +21,6 @@ io.on('connection', function (socket) {
 
     // CREATE GAME
     socket.on('create_game', function (data){
-        console.log(data);
         axios.post(url, { player: data.playerName}, {
             headers: {
                 Accept: 'application/json',
@@ -33,11 +32,56 @@ io.on('connection', function (socket) {
                 let game = games.createGame(response.data.id, data.playerName, response.data.created_at);
                 socket.join(game.gameID);
                 // Notifications to the client
-                //sio.emit('lobby_changed');
+                io.emit('lobby_changed');
             })
             .catch(error => {
                 console.log(error);
             });
+    });
+
+    socket.on('get_lobby', function (){
+        var lobbyGames = games.getLobbyGames();
+        socket.emit('my_lobby_games', lobbyGames);
+    });
+
+    socket.on('leave_game', function (data){
+        let game = games.leaveGame(data.gameID, data.playerName);
+        socket.leave(game.gameID);
+        io.emit('lobby_changed');
+    });
+
+    socket.on('join_game', function (data){
+        let game = games.gameByID(data.gameID);
+        axios.put(url + '/' + data.gameID + '/join', {
+            playerName: data.playerName,
+            team_number: game.nextTeam(),
+        }, {
+            headers: {
+                Accept: 'application/json',
+                key: 'secret'
+            }
+        })
+            .then(response => {
+                games.joinGame(data.gameID, data.playerName);
+                socket.join(game.gameID);
+                io.emit('lobby_changed');
+            })
+            .catch(error => {
+                console.log(error);
+            });
+
+
+    });
+
+    socket.on('start_game', function (data){
+        games.start(data.gameID);
+        io.emit('active_games_changed');
+        io.emit('lobby_changed');
+    });
+
+    socket.on('get_active_games', function (data) {
+        var my_games = games.getConnectedGamesOf(data.playerName);
+        socket.emit('my_games', my_games);
     });
 
 });

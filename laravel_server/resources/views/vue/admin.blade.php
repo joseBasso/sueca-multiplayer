@@ -4,17 +4,12 @@
 @section('title', 'Administration')
 
 @section('links')
-    <b-navbar-nav>
-        <b-nav-item href="#">Administration</b-nav-item>
-        <b-nav-item href="#">Platform Email</b-nav-item>
-        <b-nav-item href="#">Deck Management</b-nav-item>
-        <b-nav-item href="#">Statistics</b-nav-item>
-    </b-navbar-nav>
+    <nav-items-admin></nav-items-admin>
 @endsection
 
 @section('content')
     <div class="container">
-        yo
+        <router-view></router-view>
     </div>
 
 @endsection

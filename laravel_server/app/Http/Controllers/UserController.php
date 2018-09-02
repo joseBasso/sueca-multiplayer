@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Resources\UserResource;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Game;
 
 class UserController extends Controller
 {
@@ -53,6 +55,40 @@ class UserController extends Controller
         }
 
         return new UserResource($user);
+    }
+
+    public function getAllUsers(Request $request)
+    {
+        $this->authorize('administrate', Auth::user());
+        return User::all();
+    }
+
+    public function delete($id)
+    {
+        $user = User::findOrFail($id);
+        $this->authorize('self', $user);
+        $user->games()->detach();
+        $user->delete();
+        return response()->json(['message'=>'User deleted'], 204);
+    }
+
+    public function toggleBlockUser(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        $this->authorize('self', $user);
+        if($user->blocked == 1){
+            $user->blocked = 0;
+            $user->reason_reactivated = $request->reason_reactivated;
+
+        }
+        else{
+            $user->blocked = 1;
+            $user->reason_blocked = $request->reason_blocked;
+        }
+
+        $user->save();
+        //$this->activationFactory->sendBlockedUnblockedMail($user);
+
     }
 
 }

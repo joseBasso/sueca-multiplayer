@@ -16,6 +16,10 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::middleware('auth:api')->get('users/', 'UserController@getAllUsers');
+Route::middleware('auth:api')->delete('users/{id}/delete', 'UserController@delete');
+Route::middleware('auth:api')->put('users/{id}/block', 'UserController@toggleBlockUser');
+
 
 //Auth
 Route::post('register', 'UserController@store');
@@ -25,15 +29,21 @@ Route::middleware('auth:api')->post('logout', 'LoginControllerAPI@logout');
 Route::middleware('auth:api')->put('users/{id}', 'UserController@update');
 
 
+
 //GAMES
 
 Route::post('games', 'GameController@store')->middleware('secret.key');
+Route::put('games/{id}/leave', 'GameController@leaveGame')->middleware('secret.key');
+Route::get('games/{id}/cancel', 'GameController@cancelGame')->middleware('secret.key');
+Route::put('games/{id}/join', 'GameController@joinGame')->middleware('secret.key');
+Route::put('games/{id}/start', 'GameController@startGame')->middleware('secret.key');
+
 
 /*Route::get('games', 'GameControllerAPI@index')->middleware('secret.key');
 Route::get('games/lobby', 'GameControllerAPI@lobby')->middleware('secret.key');
 Route::get('games/{id}', 'GameControllerAPI@getGame')->middleware('secret.key');
-Route::put('games/{id}/startgame', 'GameControllerAPI@startGame')->middleware('secret.key');
-Route::get('games/{id}/cancelGame', 'GameControllerAPI@cancelGame')->middleware('secret.key');
-Route::put('games/{id}/joinGame', 'GameControllerAPI@joinGame')->middleware('secret.key');
-Route::put('games/{id}/leaveGame', 'GameControllerAPI@leaveGame')->middleware('secret.key');
 Route::put('games/{id}/startGame', 'GameControllerAPI@startGame')->middleware('secret.key');
+*/
+// DECKS
+
+Route::get('decks/{id}', 'DeckController@getDeck');

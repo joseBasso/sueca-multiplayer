@@ -11,9 +11,7 @@ class UserPolicy
 
     public function before($user, $ability)
     {
-        if ($user->admin == 1) {
-            return true;
-        }
+        return $user->admin == 1;
     }
 
     public function self(User $authUser, User $user)
@@ -21,7 +19,7 @@ class UserPolicy
         return $authUser->id == $user->id;
     }
 
-    public function administrate(User $authUser){
-        return $authUser->isAdmin();
+    public function administrate(User $authUser, User $user){
+        return $authUser->admin == 1;
     }
 }

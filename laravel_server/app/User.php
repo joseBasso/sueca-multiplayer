@@ -5,6 +5,7 @@ namespace App;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Game;
 
 class User extends Authenticatable
 {
@@ -22,6 +23,12 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function games()
+    {
+        return $this->belongsToMany(Game::class);
+    }
+
 
     public function scopeByIdentifier($query,$identifier){
         return $query->orWhere('email', $identifier)->orWhere('nickname', $identifier)->first();
