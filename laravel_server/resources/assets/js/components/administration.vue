@@ -3,10 +3,6 @@
         <h1 class="page-header">{{title}}</h1>
             <user-list :users="users" @user-block="blockUser" @user-delete="deleteUser"></user-list>
             <user-block v-if="blocking == true" :user="userBlocked" @user-blocked="userBlockDone"></user-block>
-            <div class="alert alert-warning alert-dismissable fade in" v-if="showMessage">
-                <a class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                <strong>{{message}}</strong>
-            </div>
 
     </div>
 </template>

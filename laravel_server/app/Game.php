@@ -18,7 +18,7 @@ class Game extends Model
 
     public function players()
     {
-        return $this->belongsToMany(User::class,'game_user','game_id','user_id');
+        return $this->belongsToMany(User::class,'game_user')->withPivot('team_number');
     }
 
     public function createdBy()

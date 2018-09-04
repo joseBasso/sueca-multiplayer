@@ -15,13 +15,16 @@ Vue.use(VueRouter);
 
 const administration = Vue.component('administration', require('./components/administration.vue'));
 const adminWelcome = Vue.component('adminWelcome', require('./components/adminWelcome.vue'));
-const navItemsAdmin = Vue.component('navItemsAdmin', require('./components/navItemsAdmin'));
+const navItemsAdmin = Vue.component('navItemsAdmin', require('./components/navItemsAdmin.vue'));
+const platformEmail = Vue.component('platformEmail', require('./components/platformEmail.vue'));
+const statistics = Vue.component('statistics', require('./components/adminStatistics.vue'));
 
 
 const routes = [
     { path: '/administration', component:administration },
     { path: '/welcome', component:adminWelcome },
-
+    { path: '/platform', component: platformEmail },
+    { path: '/statistics', component: statistics }
 
 ];
 

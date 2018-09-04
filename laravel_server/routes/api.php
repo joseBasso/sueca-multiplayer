@@ -29,7 +29,6 @@ Route::middleware('auth:api')->post('logout', 'LoginControllerAPI@logout');
 Route::middleware('auth:api')->put('users/{id}', 'UserController@update');
 
 
-
 //GAMES
 
 Route::post('games', 'GameController@store')->middleware('secret.key');
@@ -44,6 +43,20 @@ Route::get('games/lobby', 'GameControllerAPI@lobby')->middleware('secret.key');
 Route::get('games/{id}', 'GameControllerAPI@getGame')->middleware('secret.key');
 Route::put('games/{id}/startGame', 'GameControllerAPI@startGame')->middleware('secret.key');
 */
+
+
 // DECKS
 
 Route::get('decks/{id}', 'DeckController@getDeck');
+
+// Platform
+
+Route::middleware('auth:api')->get('platform/email', 'PlatformController@getPlatformEmail');
+Route::middleware('auth:api')->put('platform/email', 'PlatformController@updatePlatformEmail');
+
+// Statistics
+
+Route::get('platform/statistics/users', 'PlatformController@userStatistics');
+Route::middleware('auth:api')->get('platform/statistics/authed', 'PlatformController@authenticatedUserStatistics');
+Route::middleware('auth:api')->get('platform/statistics/userList', 'PlatformController@userList');
+

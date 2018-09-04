@@ -19,7 +19,7 @@ class UserPolicy
         return $authUser->id == $user->id;
     }
 
-    public function administrate(User $authUser, User $user){
+    public function administrate(User $authUser){
         return $authUser->admin == 1;
     }
 }
