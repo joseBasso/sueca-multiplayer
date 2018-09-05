@@ -38,9 +38,9 @@
                 headers: [
                     { text: 'User', sortable: false },
                     { text: 'Total Games', value: 'total_games_played' },
-                    { text: 'Wins', value: 'total_games_played'},
-                    { text: 'Draws', value: 'total_games_played'},
-                    { text: 'Defeats', value: 'total_games_played'}
+                    { text: 'Wins', value: 'wins'},
+                    { text: 'Draws', value: 'draws'},
+                    { text: 'Defeats', value: 'losses'}
                 ],
                 users: [],
                 totalGames: 0,

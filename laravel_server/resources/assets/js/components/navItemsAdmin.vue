@@ -6,7 +6,7 @@
     <b-navbar-nav v-else>
         <b-nav-item><router-link to="/administration" tag="button">Administration</router-link></b-nav-item>
         <b-nav-item><router-link to="/platform" tag="button">Platform Email</router-link></b-nav-item>
-        <b-nav-item href="#">Deck Management</b-nav-item>
+        <b-nav-item><router-link to="/decks" tag="button">Deck Management</router-link></b-nav-item>
         <b-nav-item><router-link to="/statistics" tag="button">Statistics</router-link></b-nav-item>
 
         <b-nav-item @click="logoutModal = true">Logout</b-nav-item>

@@ -18,14 +18,15 @@ const adminWelcome = Vue.component('adminWelcome', require('./components/adminWe
 const navItemsAdmin = Vue.component('navItemsAdmin', require('./components/navItemsAdmin.vue'));
 const platformEmail = Vue.component('platformEmail', require('./components/platformEmail.vue'));
 const statistics = Vue.component('statistics', require('./components/adminStatistics.vue'));
+const deckManagement = Vue.component('decks', require('./components/deckManagement.vue'));
 
 
 const routes = [
     { path: '/administration', component:administration },
     { path: '/welcome', component:adminWelcome },
     { path: '/platform', component: platformEmail },
-    { path: '/statistics', component: statistics }
-
+    { path: '/statistics', component: statistics },
+    { path: '/decks', component: deckManagement}
 ];
 
 const router = new VueRouter({

@@ -46,8 +46,15 @@ Route::put('games/{id}/startGame', 'GameControllerAPI@startGame')->middleware('s
 
 
 // DECKS
+Route::middleware('auth:api')->get('decks/path','DeckController@getBasePath');
+Route::middleware('auth:api')->get('decks/{id}', 'DeckController@getDeck');
+Route::middleware('auth:api')->get('decks','DeckController@getAllDecks');
+Route::middleware('auth:api')->post('decks/{id}/changeCard','DeckController@changeCard');
+Route::middleware('auth:api')->post('decks/{id}/hiddenFace','DeckController@changeHiddenFace');
+Route::middleware('auth:api')->post('decks','DeckController@createDeck');
+Route::middleware('auth:api')->patch('decks/{id}/toggleActive','DeckController@toggleActive');
 
-Route::get('decks/{id}', 'DeckController@getDeck');
+
 
 // Platform
 
@@ -56,7 +63,7 @@ Route::middleware('auth:api')->put('platform/email', 'PlatformController@updateP
 
 // Statistics
 
-Route::get('platform/statistics/users', 'PlatformController@userStatistics');
+Route::middleware('auth:api')->get('platform/statistics/users', 'PlatformController@userStatistics');
 Route::middleware('auth:api')->get('platform/statistics/authed', 'PlatformController@authenticatedUserStatistics');
 Route::middleware('auth:api')->get('platform/statistics/userList', 'PlatformController@userList');
 
