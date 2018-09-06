@@ -36,13 +36,9 @@ Route::put('games/{id}/leave', 'GameController@leaveGame')->middleware('secret.k
 Route::get('games/{id}/cancel', 'GameController@cancelGame')->middleware('secret.key');
 Route::put('games/{id}/join', 'GameController@joinGame')->middleware('secret.key');
 Route::put('games/{id}/start', 'GameController@startGame')->middleware('secret.key');
+Route::put('games/{id}/end', 'GameController@endGame')->middleware('secret.key');
 
 
-/*Route::get('games', 'GameControllerAPI@index')->middleware('secret.key');
-Route::get('games/lobby', 'GameControllerAPI@lobby')->middleware('secret.key');
-Route::get('games/{id}', 'GameControllerAPI@getGame')->middleware('secret.key');
-Route::put('games/{id}/startGame', 'GameControllerAPI@startGame')->middleware('secret.key');
-*/
 
 
 // DECKS

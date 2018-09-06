@@ -50,17 +50,38 @@ class GameController extends Controller
 
     public function cancelGame($id)
     {
-        $game = Game::find($id);
+        $game = Game::findOrFail($id);
         $game->status = 'canceled';
         $game->save();
         return response()->json('Game Canceled', 200);
     }
 
     public function startGame(Request $request, $id) {
-        $game = Game::find($id);
+        $game = Game::findOrFail($id);
         $game->status = 'active';
         $game->save();
         return response()->json($game, 200);
+    }
+
+    public function endGame(Request $request, $id) {
+
+        $game = Game::findOrFail($id);
+        $game->status = 'terminated';
+        $game->fill($request->all());
+        $game->save();
+        foreach ($game->team1 as $user)
+        {
+            $user->total_games_played++;
+            $user->total_points = $request->team1_points;
+            $user->save();
+        }
+        foreach ($game->team2 as $user)
+        {
+            $user->total_games_played++;
+            $user->total_points = $request->team2_points;
+            $user->save();
+        }
+        return response()->json($game, 201);
     }
 
 }

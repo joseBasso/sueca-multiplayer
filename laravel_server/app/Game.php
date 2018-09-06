@@ -27,6 +27,16 @@ class Game extends Model
     }
 
 
+    public function team1()
+    {
+        return $this->belongsToMany('App\User')->wherePivot('team_number', 1);
+    }
+
+    public function team2()
+    {
+        return $this->belongsToMany('App\User')->wherePivot('team_number', 2);
+    }
+
     public function scopeByTerminated($query){
         return $query->where('status','=','terminated');
     }

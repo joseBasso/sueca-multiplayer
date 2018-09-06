@@ -77,17 +77,24 @@ class Sueca {
         this.created_at  = created_at;
         this.players = [];
         this.cards = [];
+        this.boardCards = [];
         this.players[0] = new Player(player1Name, playerId);
         this.players[1] = undefined;
         this.players[2] = undefined;
         this.players[3] = undefined;
         this.joinedPlayers = 1;
-        this.winner = undefined;
+        this.team_winner = 0;
         this.turn = 0;
         this.team1_cardpoints = 0;
         this.team2_cardpoints = 0;
         this.team1_points = 0;
         this.team2_points = 0;
+        // system only renounces
+        this.team1_renounce = 0;
+        this.team2_renounce = 0;
+        //
+        this.team_renounce = 0;
+        this.team_checkRenounce = 0;
         this.cardTrump = undefined;
 
     }
@@ -226,13 +233,165 @@ class Sueca {
         console.log("is in Game ");
         console.log(player);
         for (let i = 0; i < 4; i++) {
-            if (this.players[i].id == player){
+            if (this.players[i].id === player){
                 return true;
             }
         }
         return false;
     }
 
+     playCard(playerId, card){
+        if (! this.isTurn(playerId)) {
+            return false;
+        }
+            let player = this.getPlayerPosition(playerId);
+            let currentPlayer = this.players[player];
+
+            if (this.boardCards.length > 0){
+                let suite = this.boardCards[0].suite;
+                if (card.suite !== suite) {
+                    let self = this;
+                    currentPlayer.cards.forEach(function (playerCard) {
+                        if (playerCard.suite === suite){
+                            if (player === 0 || player === 2) {
+                                self.team1_renounce = 1;
+                            } else {
+                                self.team2_renounce = 1;
+                            }
+                        }
+                    })
+                }
+
+                currentPlayer.cards.splice(currentPlayer.cards.findIndex(c => c.suite == card.suite && c.value == card.value), 1);
+                this.boardCards.push(card);
+
+
+                if(this.boardCards.length === 4) {
+                    let winningCard = null;
+                    let winningCardNumber = null;
+                    let self = this;
+                    this.boardCards.forEach((boardCard, index) => {
+                        if(winningCard == null) {
+                            winningCard = boardCard;
+                            winningCardNumber = index;
+                        } else {
+                            if (! this.beatsCard(winningCard, boardCard, suite)){
+                                winningCard = boardCard;
+                                winningCardNumber = index;
+                            }
+                        }
+                    });
+                    console.log("ganhou a carta: ");
+                    console.log(this.boardCards[winningCardNumber]);
+
+                    let winnerPlayer = this.turn + winningCardNumber;
+                    if(winnerPlayer > 3) {
+                        winnerPlayer = winnerPlayer - 4;
+                    }
+                    console.log("ganhou o jogador: ");
+                    console.log(this.players[winnerPlayer]);
+
+                    if(winnerPlayer === 0 || winnerPlayer === 2) {
+                        self.boardCards.forEach((wonCard) => {
+                            self.team1_cardpoints = self.team1_cardpoints + wonCard.points;
+                        });
+                    } else {
+                        self.boardCards.forEach((wonCard) => {
+                            self.team2_cardpoints = self.team2_cardpoints + wonCard.points;
+                        });
+                    }
+
+                    this.turn = winnerPlayer + 1;
+                    this.boardCards = [];
+
+                }else {
+
+                    if (this.turn === 4) {
+                        this.turn = 1;
+                    } else {
+                        this.turn++;
+                    }
+                }
+
+            } else {
+                currentPlayer.cards.splice(currentPlayer.cards.findIndex(c => c.suite == card.suite && c.value == card.value), 1);
+                this.boardCards.push(card);
+
+                if(this.turn === 4) {
+                    this.turn = 1;
+                } else {
+                    this.turn++;
+                }
+            }
+            return true;
+
+    }
+
+    beatsCard(cardA, cardB, suite){
+
+        if(cardA.suite === this.cardTrump.suite && cardB.suite !== this.cardTrump.suite) {
+            return true;
+        }
+
+        if(cardB.suite === this.cardTrump.suite && cardA.suite !== this.cardTrump.suite) {
+            return false;
+        }
+
+        if(cardA.suite === suite && cardB.suite !== suite) {
+            return true;
+        }
+
+        if(cardA.suite !== suite && cardB.suite === suite) {
+            return false;
+        }
+
+        if (cardA.suite === cardB.suite) {
+            return cardA.ranking > cardB.ranking;
+        }
+
+        return true;
+    }
+
+    isTurn(id){
+        let index = this.getPlayerPosition(id);
+        return this.turn === index + 1;
+    }
+
+    getPlayerPosition(id){
+        return this.players.findIndex(p => p.id === id);
+    }
+
+    checkIsGameOver() {
+        if(this.team1_cardpoints + this.team2_cardpoints === 120) {
+            this.gameEnded = true;
+            if(this.team1_cardpoints > this.team2_cardpoints) {
+                this.team_winner = 1;
+
+                if(this.team1_cardpoints >= 61 && this.team1_cardpoints <= 90) {
+                    this.team1_points = 1;
+                }
+                if(this.team1_cardpoints >= 91 && this.team1_points <= 119) {
+                    this.team1_points = 2;
+                }
+                if(this.team1_cardpoints === 120) {
+                    this.team1_points = 4;
+                }
+
+            } else {
+                this.team_winner = 2;
+
+                if(this.team2_cardpoints >= 61 && this.team2_cardpoints <= 90) {
+                    this.team2_points = 1;
+                }
+                if(this.team2_cardpoints >= 91 && this.team2_points <= 119) {
+                    this.team2_points = 2;
+                }
+                if(this.team2_cardpoints === 120) {
+                    this.team2_points = 4;
+                }
+            }
+        }
+    }
 }
 
 module.exports = Sueca;

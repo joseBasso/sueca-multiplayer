@@ -20,8 +20,8 @@ io.on('connection', function (socket) {
     console.log('client has connected');
 
     // CREATE GAME
-    socket.on('create_game', function (data){
-        axios.post(url, { player: data.playerName}, {
+    socket.on('create_game', function (data) {
+        axios.post(url, {player: data.playerName}, {
             headers: {
                 Accept: 'application/json',
                 key: 'secret',
@@ -39,18 +39,18 @@ io.on('connection', function (socket) {
             });
     });
 
-    socket.on('get_lobby', function (){
+    socket.on('get_lobby', function () {
         var lobbyGames = games.getLobbyGames();
         socket.emit('my_lobby_games', lobbyGames);
     });
 
-    socket.on('leave_game', function (data){
+    socket.on('leave_game', function (data) {
         let game = games.leaveGame(data.gameID, data.playerName);
         socket.leave(game.gameID);
         io.emit('lobby_changed');
     });
 
-    socket.on('join_game', function (data){
+    socket.on('join_game', function (data) {
         let game = games.gameByID(data.gameID);
         axios.put(url + '/' + data.gameID + '/join', {
             playerName: data.playerName,
@@ -73,7 +73,7 @@ io.on('connection', function (socket) {
 
     });
 
-    socket.on('start_game', function (data){
+    socket.on('start_game', function (data) {
         games.start(data.gameID);
         io.emit('active_games_changed');
         io.emit('lobby_changed');
@@ -86,7 +86,7 @@ io.on('connection', function (socket) {
         let clonedGames = JSON.parse(JSON.stringify(activeGames));
         clonedGames.forEach(function (game) {
             game.players.forEach(function (player) {
-                player.cards.forEach(function (card){
+                player.cards.forEach(function (card) {
                     if (player.id != data.playerId && card.visible == false) {
                         card.path = 'deckdefault/semFace.png';
                         card.value = undefined;
@@ -95,7 +95,42 @@ io.on('connection', function (socket) {
                 })
             })
         });
+        console.log("jogos");
+        console.log(clonedGames);
         socket.emit('active_games', clonedGames);
+    });
+
+    socket.on('play_card', function (data) {
+        let game = games.gameByID(data.gameId);
+        let jogou = game.playCard(data.player, data.card);
+        if (jogou){
+            io.to(game.gameID).emit('active_games_changed');
+            if (game.checkIsGameOver()) {
+                axios.put('http://recurso.dad/api/games/' + game.id + '/end', null,
+                    {
+                        data: {
+                            team1_cardpoints: game.team1_cardpoints,
+                            team2_cardpoints: game.team2_cardpoints,
+                            team1_points: game.team1_points,
+                            team2_points: game.team2_points,
+                            team_winner: game.team_winner,
+                            team_renunciou: game.team_renounce,
+                            team_desconfiou: game.team_checkRenounce
+                        },
+                        headers: {
+                            Accept: 'application/json',
+                            key: 'secret'
+                        }
+                    })
+                    .then(response => {
+                        io.to(game.gameID).emit('game_ended', game);
+                        console.log("game ended lmao");
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            }
+        }
     });
 
 });

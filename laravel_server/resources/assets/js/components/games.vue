@@ -13,6 +13,15 @@
                     <img v-bind:src="'storage/' + base_path + game.cardTrump.path" height="150">
                 </div>
 
+                <v-container>
+                    <h4>Board</h4>
+                    <h6>It's {{game.players[game.turn-1].playerNickname}} Turn!!</h6>
+
+                    <div>
+                        <img v-for="(card,index) in game.boardCards" v-bind:src="'storage/' + base_path + card.path" height="100">
+                    </div>
+                </v-container>
+
                 <v-container grid-list>
                     <v-layout row wrap>
                         <v-flex>
@@ -28,7 +37,7 @@
                                 <v-card v-else dark color="green" class="card">
                                     <v-card-text>Your cards</v-card-text>
                                     <div class="text-center">
-                                        <img v-for="(card,index) in game.players[0].cards" v-bind:src="'storage/' + base_path + card.path" height="90" @click="clicked">
+                                        <img v-for="(card,index) in game.players[0].cards" v-bind:src="'storage/' + base_path + card.path" height="90" @click="clicked(game, card)">
                                     </div>
                                 </v-card>
 
@@ -40,7 +49,7 @@
                                 <v-card v-else dark color="green" class="card">
                                     <v-card-text>Your cards</v-card-text>
                                     <div class="text-center">
-                                        <img v-for="(card,index) in game.players[2].cards" v-bind:src="'storage/' + base_path + card.path" height="90">
+                                        <img v-for="(card,index) in game.players[2].cards" v-bind:src="'storage/' + base_path + card.path" height="90" @click="clicked(game, card)">
                                     </div>
                                 </v-card>
 
@@ -58,7 +67,7 @@
                                 <v-card v-else dark color="green" class="card">
                                     <v-card-text>Your cards</v-card-text>
                                     <div class="text-center">
-                                        <img v-for="(card,index) in game.players[1].cards" v-bind:src="'storage/' + base_path + card.path" height="90">
+                                        <img v-for="(card,index) in game.players[1].cards" v-bind:src="'storage/' + base_path + card.path" height="90" @click="clicked(game, card)">
                                     </div>
                                 </v-card>
 
@@ -70,21 +79,26 @@
                                 <v-card v-else dark color="green" class="card">
                                     <v-card-text>Your cards</v-card-text>
                                     <div class="text-center">
-                                        <img v-for="(card,index) in game.players[3].cards" v-bind:src="'storage/' + base_path + card.path" height="90">
+                                        <img v-for="(card,index) in game.players[3].cards" v-bind:src="'storage/' + base_path + card.path" height="90" @click="clicked(game, card)">
                                     </div>
                                 </v-card>
 
                             </v-container>
 
-                            <v-container>
-                                <h4>Board</h4>
-                                <h6>It's {{game.players[game.turn-1].playerNickname}} Turn!!</h6>
-                            </v-container>
+
                         </v-flex>
                     </v-layout>
                 </v-container>
 
             </v-container>
+
+            <v-snackbar v-model="showMessage" type="info" outline>
+                {{message}}
+                <v-btn dark flat @click="showMessage = false">
+                    Close
+                </v-btn>
+            </v-snackbar>
+
         </v-container>
     </v-app>
 </template>
@@ -96,17 +110,44 @@
                 activeGames: [],
                 currentPlayer: null,
                 base_path: '',
+                message: '',
+                showMessage: ''
             }
         },
         sockets: {
             active_games(games){
+                console.log("game received");
                 console.log(games);
                 this.activeGames = games;
             },
+            active_games_changed(){
+                this.getActiveGames();
+                console.log("games changed");
+            },
+            game_ended(game){
+                let auxGame = game;
+                let playerIndex = auxGame.players.findIndex(p => p.id === currentPlayer.id);
+                let playerTeam = 0;
+                if (playerIndex == 0 || playerIndex == 2){
+                    playerTeam = 1;
+                } else {
+                    playerTeam = 2;
+                }
+
+                if (playerTeam == game.team_winner){
+                    this.message = 'You won a game!'
+                } else {
+                    this.message = 'You lost a game.'
+                }
+                this.showMessage = true;
+            }
         },
         methods: {
-            clicked: function(){
-              console.log("clicked");
+            clicked: function(game, card){
+              console.log("cliquei numa carta");
+              if (!game.gameEnded){
+                  this.$socket.emit('play_card', {gameId: game.gameID, player: this.currentPlayer.id, card: card});
+              }
             },
             getAuthedUser: function(){
                 axios.get('api/user',{
