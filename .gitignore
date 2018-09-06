@@ -1,3 +1,14 @@
 /node_server/node_modules
 laravel_server/install.sh
 .idea/workspace.xml
+laravel_server/.env.example
+laravel_server/.env.example
+laravel_server/.env.example
+node_server/package.json
+laravel_server/composer.lock
+laravel_server/package-lock.json
+laravel_server/package.json
+laravel_server/public/css/app.css
+laravel_server/public/js/admin.js
+laravel_server/public/js/app.js
+laravel_server/public/mix-manifest.json

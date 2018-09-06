@@ -8,9 +8,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Game;
+use App\Factories\ActivationFactory;
 
 class UserController extends Controller
 {
+
+  protected $activationFactory;
+
+    public function __construct(ActivationFactory $activationFactory)
+  {
+      $this->activationFactory = $activationFactory;
+  }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -27,6 +36,7 @@ class UserController extends Controller
         $user->password = bcrypt($request->password);
         $user->blocked = 1;
         $user->save();
+        $this->activationFactory->sendActivationMail($user);
 
         return response()->json(new UserResource($user), 201);
     }
@@ -89,6 +99,15 @@ class UserController extends Controller
         $user->save();
         //$this->activationFactory->sendBlockedUnblockedMail($user);
 
+    }
+
+    public function activateUser($token)
+    {
+    if ($user = $this->activationFactory->activateUser($token)) {
+        auth()->login($user);
+        return redirect()->route('game');
+    }
+    abort(404);
     }
 
 }

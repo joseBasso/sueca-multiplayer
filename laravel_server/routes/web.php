@@ -17,3 +17,6 @@ Route::get('/', function () {
 })->name('home');
 Route::get('/game','VueController@game')->name('game');
 Route::get('/admin','VueController@admin')->name('admin');
+
+Route::auth();
+Route::get('user/activation/{token}', 'UserController@activateUser')->name('user.activate');
