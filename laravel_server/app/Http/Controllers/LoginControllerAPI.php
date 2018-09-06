@@ -7,7 +7,7 @@ use App\User;
 define('YOUR_SERVER_URL', 'http://sueca.proj');
 define('CLIENT_ID', '2');
 
-define('CLIENT_SECRET','kzurOWk14IDLBsPfF5ftx1s3f0n2LZKZ6jQupVNS');
+define('CLIENT_SECRET','Di6POzLXY72I92Uh1EVD4ShSIVNwyPsrg3kIeNg2');
 
 
 class LoginControllerAPI extends Controller
