@@ -14,20 +14,20 @@ class GameList {
         return game;
     }
 
-    createGame(gameID, playerName, created_at) {
-        let game = new Sueca(gameID, playerName, created_at);
+    createGame(gameID, playerName, playerId, created_at) {
+        let game = new Sueca(gameID, playerName, playerId, created_at);
         this.games.set(game.gameID, game);
         console.log("criei um jogo\n");
         return game;
     }
 
-    joinGame(gameID, playerName) {
+    joinGame(gameID, playerName, playerId) {
         console.log(gameID + ' tem mais um jogador - ' + playerName);
         let game = this.gameByID(gameID);
         if (game===null) {
             return null;
         }
-        game.join(playerName);
+        game.join(playerName, playerId);
         return game;
     }
 
@@ -41,10 +41,10 @@ class GameList {
         return games;
     }
 
-    getConnectedGamesOf(playerName) {
+    getConnectedGamesOf(player) {
         let games = [];
         for (var [key, value] of this.games) {
-            if(value.isInGame(playerName) && value.gameStarted){
+            if(value.isInGame(player) && value.gameStarted){
                 games.push(value);
             }
         }
@@ -67,6 +67,7 @@ class GameList {
             return null;
         }
         game.start();
+        game.gameStarted = true;
         return game;
     }
 

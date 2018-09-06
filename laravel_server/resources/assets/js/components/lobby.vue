@@ -1,13 +1,13 @@
 <template>
     <v-app>
-        <h2 >Current Player : {{ currentPlayer }}</h2>
+        <h2 v-if="currentPlayer!=null">Current Player : {{ currentPlayer.nickname }}</h2>
         <div class="text-xs-center">
             <v-btn round dark  @click.prevent="createGame">Create Game</v-btn>
         </div>
         <hr>
         <h4 class="text-center">Pending games</h4>
 
-        <lobby-table :games="lobbyGames" :user="currentPlayer" @join-click="join" @leave-click="leave" @start-click="start"></lobby-table>
+        <lobby-table :games="lobbyGames" :user="currentPlayer.nickname" @join-click="join" @leave-click="leave" @start-click="start"></lobby-table>
 </v-app>
 </template>
 
@@ -18,7 +18,7 @@
 
         data: function () {
             return {
-                currentPlayer: '',
+                currentPlayer: null,
                 socketId: '',
                 lobbyGames: [],
             }
@@ -48,28 +48,28 @@
                     }
                 })
                     .then(response=>{
-                        this.currentPlayer = response.data.nickname;
+                        this.currentPlayer = response.data;
                     })
                     .catch(error=>{
-                        warnMessage(error.response.data.msg);
+                        console.log(error.response);
                     })
             },
 
             createGame: function(){
-                this.$socket.emit('create_game', { playerName: this.currentPlayer });
+                this.$socket.emit('create_game', { playerName: this.currentPlayer.nickname, playerId: this.currentPlayer.id});
             },
 
             loadLobby(){
                 this.$socket.emit('get_lobby');
             },
             join: function(game){
-                this.$socket.emit('join_game', {gameID: game.gameID, playerName: this.currentPlayer });
+                this.$socket.emit('join_game', {gameID: game.gameID, playerName: this.currentPlayer.nickname, playerId: this.currentPlayer.id });
             },
             leave: function(game){
-                this.$socket.emit('leave_game', {gameID: game.gameID, playerName: this.currentPlayer });
+                this.$socket.emit('leave_game', {gameID: game.gameID, playerName: this.currentPlayer.nickname });
             },
             start: function(game){
-                this.$socket.emit('start_game', {gameID: game.gameID, playerName: this.currentPlayer });
+                this.$socket.emit('start_game', {gameID: game.gameID, playerName: this.currentPlayer.nickname });
             }
         },
         components: {

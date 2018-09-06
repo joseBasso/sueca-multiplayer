@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Deck;
 use Illuminate\Http\Request;
 use App\Game;
 use App\User;
@@ -14,7 +15,18 @@ class GameController extends Controller
         $game = new Game();
         $user = User::byIdentifier($request->player)->id;
         $game->created_by = $user;
-        $game->deck_used = 1;
+        $deckList = Deck::where('active','=','1')->get();
+        $decks = $deckList->pluck('id');
+        $deck = null;
+        if (count($decks) > 1){
+            $deck = array_rand($decks,1);
+        }
+        else{
+            $deck = $decks[0];
+        }
+        $game->deck_used = $deck;
+        $game->team1_points = 0;
+        $game->team2_points = 0;
         $game->save();
         $game->players()->attach($user, ['team_number' => 1]);
 

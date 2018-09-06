@@ -25,8 +25,9 @@ const register = Vue.component('register', require('./components/register.vue'))
 const navItems = Vue.component('nav-items', require('./components/navItems.vue'));
 const userProfile = Vue.component('user-profile', require('./components/userProfile.vue'));
 const userStatistics = Vue.component('user-statistics', require('./components/userStatistics.vue'));
-
 const lobby = Vue.component('lobby', require('./components/lobby.vue'));
+const games = Vue.component('games', require('./components/games.vue'));
+
 
 
 const routes = [
@@ -34,7 +35,9 @@ const routes = [
     { path: '/register', component:register },
     { path: '/account', component:userProfile },
     { path: '/statistics', component:userStatistics },
-    { path: '/lobby', component:lobby }
+    { path: '/lobby', component:lobby },
+    { path: '/multiplayer', component: games}
+
 
 ];
 

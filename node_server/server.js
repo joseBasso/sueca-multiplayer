@@ -29,7 +29,7 @@ io.on('connection', function (socket) {
         })
             .then(response => {
 
-                let game = games.createGame(response.data.id, data.playerName, response.data.created_at);
+                let game = games.createGame(response.data.id, data.playerName, data.playerId, response.data.created_at);
                 socket.join(game.gameID);
                 // Notifications to the client
                 io.emit('lobby_changed');
@@ -62,7 +62,7 @@ io.on('connection', function (socket) {
             }
         })
             .then(response => {
-                games.joinGame(data.gameID, data.playerName);
+                games.joinGame(data.gameID, data.playerName, data.playerId);
                 socket.join(game.gameID);
                 io.emit('lobby_changed');
             })
@@ -80,8 +80,22 @@ io.on('connection', function (socket) {
     });
 
     socket.on('get_active_games', function (data) {
-        var my_games = games.getConnectedGamesOf(data.playerName);
-        socket.emit('my_games', my_games);
+        console.log("get active games");
+        let activeGames = games.getConnectedGamesOf(data.playerId);
+        //cloning the array
+        let clonedGames = JSON.parse(JSON.stringify(activeGames));
+        clonedGames.forEach(function (game) {
+            game.players.forEach(function (player) {
+                player.cards.forEach(function (card){
+                    if (player.id != data.playerId && card.visible == false) {
+                        card.path = 'deckdefault/semFace.png';
+                        card.value = undefined;
+                        card.suite = undefined;
+                    }
+                })
+            })
+        });
+        socket.emit('active_games', clonedGames);
     });
 
 });

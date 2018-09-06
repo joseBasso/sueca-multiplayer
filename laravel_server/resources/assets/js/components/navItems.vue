@@ -8,7 +8,7 @@
         <b-nav-item><router-link to="/account" tag="button">Account</router-link></b-nav-item>
         <b-nav-item><router-link to="/statistics" tag="button">Statistics</router-link></b-nav-item>
         <b-nav-item><router-link to="/lobby" tag="button">Lobby</router-link></b-nav-item>
-        <b-nav-item href="#">Game</b-nav-item>
+        <b-nav-item><router-link to="/multiplayer" tag="button">Game</router-link></b-nav-item>
         <b-nav-item @click="logoutModal = true">Logout</b-nav-item>
         <b-modal @ok="logout()" title="Logout?" ok-title="Logout" v-model="logoutModal">
             Are you sure you want to logout?

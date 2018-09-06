@@ -4,8 +4,8 @@ let url = 'http://sueca.proj/api/games';
 
 
 class Player {
-    constructor(playerNickname) {
-        this.id = 0;
+    constructor(playerNickname, id) {
+        this.id = id;
         this.playerNickname = playerNickname;
         this.score = 0;
         this.cards = [];
@@ -62,13 +62,14 @@ class Card {
         this.suite = suite;
         this.path = path;
         this.value = value;
+        this.visible = false;
 
     }
 }
 
 
 class Sueca {
-    constructor(ID, player1Name, created_at) {
+    constructor(ID, player1Name, playerId, created_at) {
         this.gameID = ID;
         this.owner = player1Name;
         this.gameEnded = false;
@@ -76,18 +77,24 @@ class Sueca {
         this.created_at  = created_at;
         this.players = [];
         this.cards = [];
-        this.players[0] = new Player(player1Name);
+        this.players[0] = new Player(player1Name, playerId);
         this.players[1] = undefined;
         this.players[2] = undefined;
         this.players[3] = undefined;
         this.joinedPlayers = 1;
         this.winner = undefined;
         this.turn = 0;
+        this.team1_cardpoints = 0;
+        this.team2_cardpoints = 0;
+        this.team1_points = 0;
+        this.team2_points = 0;
+        this.cardTrump = undefined;
+
     }
 
-    join(playerNickname){
-        this.players[this.joinedPlayers] = new Player(playerNickname);
-        this.players[this.joinedPlayers].id = this.joinedPlayers;
+    join(playerNickname, playerId){
+        this.players[this.joinedPlayers] = new Player(playerNickname, playerId);
+        this.players[this.joinedPlayers].id = playerId;
         this.joinedPlayers++;
     }
 
@@ -99,6 +106,7 @@ class Sueca {
             for (var i = 0; i < this.joinedPlayers; i++) {
                 if (this.players[i].playerNickname == playerName) {
                     this.players[i].playerNickname = undefined;
+                    this.players[i].id = undefined;
                     this.joinedPlayers--;
 
                     this.removePlayerFromGame(playerName);
@@ -145,6 +153,7 @@ class Sueca {
     }
 
     start() {
+        let self = this;
         if (!this.gameEnded && this.joinedPlayers == 4) {
             axios.put(url + '/' + this.gameID + '/start', null, {
                 headers: {
@@ -153,9 +162,8 @@ class Sueca {
                 }
             })
                 .then(response => {
-                    this.gameStarted = true;
-                    this.generateDeck();
-                    console.log(this.cards);
+                    self.gameStarted = true;
+                    self.generateDeck();
                 })
                 .catch(error => {
                     console.log(error);
@@ -201,17 +209,24 @@ class Sueca {
 
     distributeCards(){
         var cardsDealt = 0;
+        this.turn = 4;
         for (var i = 0; i < 4; i++) {
             for (var j = 0; j < 10; j++) {
+                if (i === 0 && j === 0){
+                    this.cardTrump = this.cards[cardsDealt + j];
+                    this.cards[cardsDealt + j].visible = true;
+                }
                 this.players[i].cards.push(this.cards[cardsDealt + j]);
             }
             cardsDealt = cardsDealt + 10;
         }
     }
 
-    isInGame(playerName) {
+    isInGame(player) {
+        console.log("is in Game ");
+        console.log(player);
         for (let i = 0; i < 4; i++) {
-            if (this.players[i].playerNickname == playerName){
+            if (this.players[i].id == player){
                 return true;
             }
         }
