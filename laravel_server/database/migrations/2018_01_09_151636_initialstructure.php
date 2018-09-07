@@ -13,6 +13,8 @@ class InitialStructure extends Migration
      */
     public function up()
     {
+
+
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
@@ -106,12 +108,14 @@ class InitialStructure extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('game_user');
-        Schema::dropIfExists('games');
-        Schema::dropIfExists('cards');
-        Schema::dropIfExists('decks');
-        Schema::dropIfExists('config');
-        Schema::dropIfExists('password_resets');
-        Schema::dropIfExists('users');
+      Schema::dropIfExists('game_user');
+      Schema::dropIfExists('games');
+      Schema::dropIfExists('cards');
+      Schema::dropIfExists('decks');
+      Schema::dropIfExists('config');
+      Schema::dropIfExists('password_resets');
+      Schema::dropIfExists('user_activations');
+      Schema::dropIfExists('users');
+
     }
 }
