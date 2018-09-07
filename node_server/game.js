@@ -74,7 +74,7 @@ class Sueca {
         this.owner = player1Name;
         this.gameEnded = false;
         this.gameStarted = false;
-        this.created_at  = created_at;
+        this.created_at = created_at;
         this.players = [];
         this.cards = [];
         this.boardCards = [];
@@ -99,7 +99,7 @@ class Sueca {
 
     }
 
-    join(playerNickname, playerId){
+    join(playerNickname, playerId) {
         this.players[this.joinedPlayers] = new Player(playerNickname, playerId);
         this.players[this.joinedPlayers].id = playerId;
         this.joinedPlayers++;
@@ -109,7 +109,7 @@ class Sueca {
         if (this.owner == playerName) {
             this.cancelGame();
             this.gameEnded = true;
-        }else{
+        } else {
             for (var i = 0; i < this.joinedPlayers; i++) {
                 if (this.players[i].playerNickname == playerName) {
                     this.players[i].playerNickname = undefined;
@@ -123,7 +123,7 @@ class Sueca {
         }
     }
 
-    removePlayerFromGame(playerName){
+    removePlayerFromGame(playerName) {
         axios.put(url + '/' + this.gameID + '/leave', {
             playerName: playerName
         }, {
@@ -140,8 +140,8 @@ class Sueca {
 
     }
 
-    cancelGame(){
-        axios.get(url + '/' + this.gameID + '/cancel',{
+    cancelGame() {
+        axios.get(url + '/' + this.gameID + '/cancel', {
             headers: {
                 Accept: 'application/json',
                 key: 'secret',
@@ -155,7 +155,7 @@ class Sueca {
 
     }
 
-    nextTeam(){
+    nextTeam() {
         return this.joinedPlayers % 2 == 0 ? 1 : 2;
     }
 
@@ -179,32 +179,32 @@ class Sueca {
         }
     }
 
-    generateDeck(){
+    generateDeck() {
         let deckCards;
         axios.get('http://sueca.proj/api/decks/1', {
             headers: {
                 Accept: 'application/json',
             }
         })
-            .then(response=>{
+            .then(response => {
                 deckCards = response.data;
                 this.initializeDeck(deckCards);
                 this.shuffleDeck();
                 this.distributeCards();
             })
-            .catch(error=>{
+            .catch(error => {
                 console.log(error);
             });
     }
 
-    initializeDeck(deckCards){
+    initializeDeck(deckCards) {
         for (var i = 0; i < 40; i++) {
             var card = new Card(deckCards[i].value, deckCards[i].suite, deckCards[i].path);
             this.cards.push(card);
         }
     }
 
-    shuffleDeck(){
+    shuffleDeck() {
         var j, x, i;
         for (i = this.cards.length - 1; i > 0; i--) {
             j = Math.floor(Math.random() * (i + 1));
@@ -214,12 +214,12 @@ class Sueca {
         }
     }
 
-    distributeCards(){
+    distributeCards() {
         var cardsDealt = 0;
         this.turn = 4;
         for (var i = 0; i < 4; i++) {
             for (var j = 0; j < 10; j++) {
-                if (i === 0 && j === 0){
+                if (i === 0 && j === 0) {
                     this.cardTrump = this.cards[cardsDealt + j];
                     this.cards[cardsDealt + j].visible = true;
                 }
@@ -233,115 +233,115 @@ class Sueca {
         console.log("is in Game ");
         console.log(player);
         for (let i = 0; i < 4; i++) {
-            if (this.players[i].id === player){
+            if (this.players[i].id === player) {
                 return true;
             }
         }
         return false;
     }
 
-     playCard(playerId, card){
-        if (! this.isTurn(playerId)) {
+    playCard(playerId, card) {
+        if (!this.isTurn(playerId)) {
             return false;
         }
-            let player = this.getPlayerPosition(playerId);
-            let currentPlayer = this.players[player];
+        let player = this.getPlayerPosition(playerId);
+        let currentPlayer = this.players[player];
 
-            if (this.boardCards.length > 0){
-                let suite = this.boardCards[0].suite;
-                if (card.suite !== suite) {
-                    let self = this;
-                    currentPlayer.cards.forEach(function (playerCard) {
-                        if (playerCard.suite === suite){
-                            if (player === 0 || player === 2) {
-                                self.team1_renounce = 1;
-                            } else {
-                                self.team2_renounce = 1;
-                            }
+        if (this.boardCards.length > 0) {
+            let suite = this.boardCards[0].suite;
+            if (card.suite !== suite) {
+                let self = this;
+                currentPlayer.cards.forEach(function (playerCard) {
+                    if (playerCard.suite === suite) {
+                        if (player === 0 || player === 2) {
+                            self.team1_renounce = 1;
+                        } else {
+                            self.team2_renounce = 1;
                         }
-                    })
-                }
+                    }
+                })
+            }
 
-                currentPlayer.cards.splice(currentPlayer.cards.findIndex(c => c.suite == card.suite && c.value == card.value), 1);
-                this.boardCards.push(card);
+            currentPlayer.cards.splice(currentPlayer.cards.findIndex(c => c.suite == card.suite && c.value == card.value), 1);
+            this.boardCards.push(card);
 
 
-                if(this.boardCards.length === 4) {
-                    let winningCard = null;
-                    let winningCardNumber = null;
-                    let self = this;
-                    this.boardCards.forEach((boardCard, index) => {
-                        if(winningCard == null) {
+            if (this.boardCards.length === 4) {
+                let winningCard = null;
+                let winningCardNumber = null;
+                let self = this;
+                this.boardCards.forEach((boardCard, index) => {
+                    if (winningCard == null) {
+                        winningCard = boardCard;
+                        winningCardNumber = index;
+                    } else {
+                        if (!this.beatsCard(winningCard, boardCard, suite)) {
                             winningCard = boardCard;
                             winningCardNumber = index;
-                        } else {
-                            if (! this.beatsCard(winningCard, boardCard, suite)){
-                                winningCard = boardCard;
-                                winningCardNumber = index;
-                            }
                         }
+                    }
+                });
+                console.log("ganhou a carta: ");
+                console.log(this.boardCards[winningCardNumber]);
+
+                let winnerPlayer = this.turn + winningCardNumber;
+                if (winnerPlayer > 3) {
+                    winnerPlayer = winnerPlayer - 4;
+                }
+                console.log("ganhou o jogador: ");
+                console.log(this.players[winnerPlayer]);
+
+                if (winnerPlayer === 0 || winnerPlayer === 2) {
+                    self.boardCards.forEach((wonCard) => {
+                        self.team1_cardpoints = self.team1_cardpoints + wonCard.points;
                     });
-                    console.log("ganhou a carta: ");
-                    console.log(this.boardCards[winningCardNumber]);
-
-                    let winnerPlayer = this.turn + winningCardNumber;
-                    if(winnerPlayer > 3) {
-                        winnerPlayer = winnerPlayer - 4;
-                    }
-                    console.log("ganhou o jogador: ");
-                    console.log(this.players[winnerPlayer]);
-
-                    if(winnerPlayer === 0 || winnerPlayer === 2) {
-                        self.boardCards.forEach((wonCard) => {
-                            self.team1_cardpoints = self.team1_cardpoints + wonCard.points;
-                        });
-                    } else {
-                        self.boardCards.forEach((wonCard) => {
-                            self.team2_cardpoints = self.team2_cardpoints + wonCard.points;
-                        });
-                    }
-
-                    this.turn = winnerPlayer + 1;
-                    this.boardCards = [];
-
-                }else {
-
-                    if (this.turn === 4) {
-                        this.turn = 1;
-                    } else {
-                        this.turn++;
-                    }
+                } else {
+                    self.boardCards.forEach((wonCard) => {
+                        self.team2_cardpoints = self.team2_cardpoints + wonCard.points;
+                    });
                 }
 
-            } else {
-                currentPlayer.cards.splice(currentPlayer.cards.findIndex(c => c.suite == card.suite && c.value == card.value), 1);
-                this.boardCards.push(card);
+                this.turn = winnerPlayer + 1;
+                this.boardCards = [];
 
-                if(this.turn === 4) {
+            } else {
+
+                if (this.turn === 4) {
                     this.turn = 1;
                 } else {
                     this.turn++;
                 }
             }
-            return true;
+
+        } else {
+            currentPlayer.cards.splice(currentPlayer.cards.findIndex(c => c.suite == card.suite && c.value == card.value), 1);
+            this.boardCards.push(card);
+
+            if (this.turn === 4) {
+                this.turn = 1;
+            } else {
+                this.turn++;
+            }
+        }
+        return true;
 
     }
 
-    beatsCard(cardA, cardB, suite){
+    beatsCard(cardA, cardB, suite) {
 
-        if(cardA.suite === this.cardTrump.suite && cardB.suite !== this.cardTrump.suite) {
+        if (cardA.suite === this.cardTrump.suite && cardB.suite !== this.cardTrump.suite) {
             return true;
         }
 
-        if(cardB.suite === this.cardTrump.suite && cardA.suite !== this.cardTrump.suite) {
+        if (cardB.suite === this.cardTrump.suite && cardA.suite !== this.cardTrump.suite) {
             return false;
         }
 
-        if(cardA.suite === suite && cardB.suite !== suite) {
+        if (cardA.suite === suite && cardB.suite !== suite) {
             return true;
         }
 
-        if(cardA.suite !== suite && cardB.suite === suite) {
+        if (cardA.suite !== suite && cardB.suite === suite) {
             return false;
         }
 
@@ -352,45 +352,49 @@ class Sueca {
         return true;
     }
 
-    isTurn(id){
+    isTurn(id) {
         let index = this.getPlayerPosition(id);
         return this.turn === index + 1;
     }
 
-    getPlayerPosition(id){
+    getPlayerPosition(id) {
         return this.players.findIndex(p => p.id === id);
     }
 
     checkIsGameOver() {
-        if(this.team1_cardpoints + this.team2_cardpoints === 120) {
+        if (this.team1_cardpoints + this.team2_cardpoints === 120) {
             this.gameEnded = true;
-            if(this.team1_cardpoints > this.team2_cardpoints) {
+            if (this.team1_cardpoints > this.team2_cardpoints) {
                 this.team_winner = 1;
 
-                if(this.team1_cardpoints >= 61 && this.team1_cardpoints <= 90) {
+                if (this.team1_cardpoints >= 61 && this.team1_cardpoints <= 90) {
                     this.team1_points = 1;
                 }
-                if(this.team1_cardpoints >= 91 && this.team1_points <= 119) {
+                if (this.team1_cardpoints >= 91 && this.team1_points <= 119) {
                     this.team1_points = 2;
                 }
-                if(this.team1_cardpoints === 120) {
+                if (this.team1_cardpoints === 120) {
                     this.team1_points = 4;
                 }
 
             } else {
                 this.team_winner = 2;
 
-                if(this.team2_cardpoints >= 61 && this.team2_cardpoints <= 90) {
+                if (this.team2_cardpoints >= 61 && this.team2_cardpoints <= 90) {
                     this.team2_points = 1;
                 }
-                if(this.team2_cardpoints >= 91 && this.team2_points <= 119) {
+                if (this.team2_cardpoints >= 91 && this.team2_points <= 119) {
                     this.team2_points = 2;
                 }
-                if(this.team2_cardpoints === 120) {
+                if (this.team2_cardpoints === 120) {
                     this.team2_points = 4;
                 }
+
+
             }
+            return true;
         }
+        return false;
     }
 }
 

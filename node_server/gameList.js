@@ -44,7 +44,7 @@ class GameList {
     getConnectedGamesOf(player) {
         let games = [];
         for (var [key, value] of this.games) {
-            if(value.isInGame(player) && value.gameStarted){
+            if(value.isInGame(player) && value.gameStarted && !(value.gameEnded)){
                 games.push(value);
             }
         }

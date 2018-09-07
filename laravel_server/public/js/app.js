@@ -90042,7 +90042,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             currentPlayer: null,
             base_path: '',
             message: '',
-            showMessage: ''
+            showMessage: false
         };
     },
     sockets: {
@@ -90053,12 +90053,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         active_games_changed: function active_games_changed() {
             this.getActiveGames();
-            console.log("games changed");
         },
         game_ended: function game_ended(game) {
+            var _this = this;
+
             var auxGame = game;
             var playerIndex = auxGame.players.findIndex(function (p) {
-                return p.id === currentPlayer.id;
+                return p.id === _this.currentPlayer.id;
             });
             var playerTeam = 0;
             if (playerIndex == 0 || playerIndex == 2) {
@@ -90077,13 +90078,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     methods: {
         clicked: function clicked(game, card) {
-            console.log("cliquei numa carta");
             if (!game.gameEnded) {
                 this.$socket.emit('play_card', { gameId: game.gameID, player: this.currentPlayer.id, card: card });
             }
         },
         getAuthedUser: function getAuthedUser() {
-            var _this = this;
+            var _this2 = this;
 
             axios.get('api/user', {
                 headers: {
@@ -90091,8 +90091,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     Authorization: window.localStorage.getItem('access_token')
                 }
             }).then(function (response) {
-                _this.currentPlayer = response.data;
-                _this.getActiveGames();
+                _this2.currentPlayer = response.data;
+                _this2.getActiveGames();
             }).catch(function (error) {
                 console.log(error.response);
             });
@@ -90101,7 +90101,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.$socket.emit('get_active_games', { playerId: this.currentPlayer.id });
         },
         getBasePath: function getBasePath() {
-            var _this2 = this;
+            var _this3 = this;
 
             axios.get('api/decks/path', {
                 headers: {
@@ -90109,7 +90109,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     Authorization: window.localStorage.getItem('access_token')
                 }
             }).then(function (response) {
-                _this2.base_path = response.data;
+                _this3.base_path = response.data;
             }).catch(function (error) {
                 console.log(error.response);
             });

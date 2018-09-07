@@ -67,8 +67,15 @@ class GameController extends Controller
 
         $game = Game::findOrFail($id);
         $game->status = 'terminated';
-        $game->fill($request->all());
+        $game->team_renunciou = $request->team_renunciou;
+        $game->team_desconfiou = $request->team_desconfiou;
+        $game->team1_cardpoints = $request->team1_cardpoints;
+        $game->team2_cardpoints = $request->team2_cardpoints;
+        $game->team1_points = $request->team1_points;
+        $game->team2_points = $request->team2_points;
+        $game->team_winner = $request->team_winner;
         $game->save();
+
         foreach ($game->team1 as $user)
         {
             $user->total_games_played++;

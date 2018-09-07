@@ -111,7 +111,7 @@
                 currentPlayer: null,
                 base_path: '',
                 message: '',
-                showMessage: ''
+                showMessage: false
             }
         },
         sockets: {
@@ -122,11 +122,10 @@
             },
             active_games_changed(){
                 this.getActiveGames();
-                console.log("games changed");
             },
             game_ended(game){
                 let auxGame = game;
-                let playerIndex = auxGame.players.findIndex(p => p.id === currentPlayer.id);
+                let playerIndex = auxGame.players.findIndex(p => p.id === this.currentPlayer.id);
                 let playerTeam = 0;
                 if (playerIndex == 0 || playerIndex == 2){
                     playerTeam = 1;
@@ -144,7 +143,6 @@
         },
         methods: {
             clicked: function(game, card){
-              console.log("cliquei numa carta");
               if (!game.gameEnded){
                   this.$socket.emit('play_card', {gameId: game.gameID, player: this.currentPlayer.id, card: card});
               }

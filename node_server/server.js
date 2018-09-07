@@ -106,17 +106,16 @@ io.on('connection', function (socket) {
         if (jogou){
             io.to(game.gameID).emit('active_games_changed');
             if (game.checkIsGameOver()) {
-                axios.put('http://recurso.dad/api/games/' + game.id + '/end', null,
+                axios.put(url +'/' + game.gameID + '/end', {
+                        team1_cardpoints: game.team1_cardpoints,
+                        team2_cardpoints: game.team2_cardpoints,
+                        team1_points: game.team1_points,
+                        team2_points: game.team2_points,
+                        team_winner: game.team_winner,
+                        team_renunciou: game.team_renounce,
+                        team_desconfiou: game.team_checkRenounce
+                    },
                     {
-                        data: {
-                            team1_cardpoints: game.team1_cardpoints,
-                            team2_cardpoints: game.team2_cardpoints,
-                            team1_points: game.team1_points,
-                            team2_points: game.team2_points,
-                            team_winner: game.team_winner,
-                            team_renunciou: game.team_renounce,
-                            team_desconfiou: game.team_checkRenounce
-                        },
                         headers: {
                             Accept: 'application/json',
                             key: 'secret'
@@ -127,7 +126,7 @@ io.on('connection', function (socket) {
                         console.log("game ended lmao");
                     })
                     .catch(function (error) {
-                        console.log(error);
+                        console.log(error.response);
                     });
             }
         }
