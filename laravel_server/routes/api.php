@@ -44,6 +44,7 @@ Route::put('games/{id}/end', 'GameController@endGame')->middleware('secret.key')
 // DECKS
 Route::middleware('auth:api')->get('decks/path','DeckController@getBasePath');
 Route::get('decks/{id}', 'DeckController@getDeck');
+Route::get('decks/activeDeck', 'DeckController@getSomeDeck');
 Route::middleware('auth:api')->get('decks','DeckController@getAllDecks');
 Route::middleware('auth:api')->post('decks/{id}/changeCard','DeckController@changeCard');
 Route::middleware('auth:api')->post('decks/{id}/hiddenFace','DeckController@changeHiddenFace');

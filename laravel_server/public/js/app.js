@@ -90034,6 +90034,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -90062,28 +90063,54 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 return p.id === _this.currentPlayer.id;
             });
             var playerTeam = 0;
-            if (playerIndex == 0 || playerIndex == 2) {
+            if (playerIndex === 0 || playerIndex === 2) {
+                playerTeam = 1;
+            } else {
+                playerTeam = 2;
+            }
+
+            if (playerTeam === game.team_winner) {
+                this.message = 'You won a game!';
+            } else {
+                this.message = 'You lost a game.';
+            }
+            this.showMessage = true;
+        },
+        renounce_confirmed: function renounce_confirmed(game) {
+            var _this2 = this;
+
+            var auxGame = game;
+            var playerIndex = auxGame.players.findIndex(function (p) {
+                return p.id === _this2.currentPlayer.id;
+            });
+            var playerTeam = 0;
+            if (playerIndex === 0 || playerIndex === 2) {
                 playerTeam = 1;
             } else {
                 playerTeam = 2;
             }
 
             if (playerTeam == game.team_winner) {
-                this.message = 'You won a game!';
+                this.message = 'You won due to a renounce report';
             } else {
-                this.message = 'You lost a game.';
+                this.message = 'You lost due to a renounce report';
             }
             this.showMessage = true;
         }
     },
     methods: {
+        reportRenounce: function reportRenounce(game) {
+            if (!game.gameEnded) {
+                this.$socket.emit('report_renounce', { gameId: game.gameID, player: this.currentPlayer.id });
+            }
+        },
         clicked: function clicked(game, card) {
             if (!game.gameEnded) {
                 this.$socket.emit('play_card', { gameId: game.gameID, player: this.currentPlayer.id, card: card });
             }
         },
         getAuthedUser: function getAuthedUser() {
-            var _this2 = this;
+            var _this3 = this;
 
             axios.get('api/user', {
                 headers: {
@@ -90091,8 +90118,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     Authorization: window.localStorage.getItem('access_token')
                 }
             }).then(function (response) {
-                _this2.currentPlayer = response.data;
-                _this2.getActiveGames();
+                _this3.currentPlayer = response.data;
+                _this3.getActiveGames();
             }).catch(function (error) {
                 console.log(error.response);
             });
@@ -90101,7 +90128,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.$socket.emit('get_active_games', { playerId: this.currentPlayer.id });
         },
         getBasePath: function getBasePath() {
-            var _this3 = this;
+            var _this4 = this;
 
             axios.get('api/decks/path', {
                 headers: {
@@ -90109,7 +90136,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     Authorization: window.localStorage.getItem('access_token')
                 }
             }).then(function (response) {
-                _this3.base_path = response.data;
+                _this4.base_path = response.data;
             }).catch(function (error) {
                 console.log(error.response);
             });
@@ -90175,30 +90202,6 @@ var render = function() {
                       height: "150"
                     }
                   })
-                ]),
-                _vm._v(" "),
-                _c("v-container", [
-                  _c("h4", [_vm._v("Board")]),
-                  _vm._v(" "),
-                  _c("h6", [
-                    _vm._v(
-                      "It's " +
-                        _vm._s(game.players[game.turn - 1].playerNickname) +
-                        " Turn!!"
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    _vm._l(game.boardCards, function(card, index) {
-                      return _c("img", {
-                        attrs: {
-                          src: "storage/" + _vm.base_path + card.path,
-                          height: "100"
-                        }
-                      })
-                    })
-                  )
                 ]),
                 _vm._v(" "),
                 _c(
@@ -90365,6 +90368,58 @@ var render = function() {
                                       ],
                                       1
                                     )
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c("br"),
+                            _vm._v(" "),
+                            _c(
+                              "v-container",
+                              [
+                                _c("h4", [_vm._v("Board")]),
+                                _vm._v(" "),
+                                _c("h6", [
+                                  _vm._v(
+                                    "It's " +
+                                      _vm._s(
+                                        game.players[game.turn - 1]
+                                          .playerNickname
+                                      ) +
+                                      " Turn!!"
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c(
+                                  "v-btn",
+                                  {
+                                    attrs: { xs: "" },
+                                    nativeOn: {
+                                      click: function($event) {
+                                        _vm.reportRenounce(game)
+                                      }
+                                    }
+                                  },
+                                  [_vm._v("Report Renounce")]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  _vm._l(game.boardCards, function(
+                                    card,
+                                    index
+                                  ) {
+                                    return _c("img", {
+                                      attrs: {
+                                        src:
+                                          "storage/" +
+                                          _vm.base_path +
+                                          card.path,
+                                        height: "100"
+                                      }
+                                    })
+                                  })
+                                )
                               ],
                               1
                             ),

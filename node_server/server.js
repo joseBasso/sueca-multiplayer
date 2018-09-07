@@ -132,4 +132,33 @@ io.on('connection', function (socket) {
         }
     });
 
-});
+    socket.on('report_renounce', function (data) {
+        let game = games.gameByID(data.gameId);
+        if(game) {
+            game.reportRenounce(data.player);
+            axios.put(url +'/' + game.gameID + '/end', {
+                    team1_cardpoints: game.team1_cardpoints,
+                    team2_cardpoints: game.team2_cardpoints,
+                    team1_points: game.team1_points,
+                    team2_points: game.team2_points,
+                    team_winner: game.team_winner,
+                    team_renunciou: game.team_renounce,
+                    team_desconfiou: game.team_checkRenounce
+                },
+                {
+                    headers: {
+                        Accept: 'application/json',
+                        key: 'secret'
+                    }
+                })
+                .then(response => {
+                    io.to(game.gameID).emit('renounce_confirmed', game);
+                })
+                .catch(function (error) {
+                    console.log(error.response);
+                })
+            io.to(game.gameID).emit('active_games_changed');
+        }
+    });
+
+    });

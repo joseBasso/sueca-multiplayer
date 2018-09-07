@@ -96,6 +96,7 @@ class Sueca {
         this.team_renounce = 0;
         this.team_checkRenounce = 0;
         this.cardTrump = undefined;
+        this.deck = null;
 
     }
 
@@ -170,14 +171,16 @@ class Sueca {
             })
                 .then(response => {
                     self.gameStarted = true;
-                    self.generateDeck();
+                    this.generateDeck();
+
                 })
                 .catch(error => {
-                    console.log(error);
+                    console.log(error.response);
                 });
 
         }
     }
+
 
     generateDeck() {
         let deckCards;
@@ -230,8 +233,6 @@ class Sueca {
     }
 
     isInGame(player) {
-        console.log("is in Game ");
-        console.log(player);
         for (let i = 0; i < 4; i++) {
             if (this.players[i].id === player) {
                 return true;
@@ -281,15 +282,13 @@ class Sueca {
                         }
                     }
                 });
-                console.log("ganhou a carta: ");
-                console.log(this.boardCards[winningCardNumber]);
+
 
                 let winnerPlayer = this.turn + winningCardNumber;
                 if (winnerPlayer > 3) {
                     winnerPlayer = winnerPlayer - 4;
                 }
-                console.log("ganhou o jogador: ");
-                console.log(this.players[winnerPlayer]);
+
 
                 if (winnerPlayer === 0 || winnerPlayer === 2) {
                     self.boardCards.forEach((wonCard) => {
@@ -396,6 +395,38 @@ class Sueca {
         }
         return false;
     }
+
+    reportRenounce(player) {
+        this.gameEnded = true;
+        let playerPosition = this.getPlayerPosition(player);
+        if(playerPosition === 0 || playerPosition === 2) {
+            this.team_checkRenounce = this.team_checkRenounce + 1;
+
+            if(this.team2_renounce === 1) {
+                this.team_renounce = this.team_renounce + 1;
+                this.team_winner = 1;
+                this.team1_points = 4;
+                this.team2_points = -4;
+            } else {
+                this.team_winner = 2;
+                this.team1_points = -4;
+                this.team2_points = 4;
+            }
+        } else {
+            this.team_checkRenounce = this.team_checkRenounce + 2;
+            if(this.team1_renounce === 1) {
+                this.team_renounce = this.team_renounce + 2;
+                this.team_winner = 2;
+                this.team1_points = -4;
+                this.team2_points = 4;
+            } else {
+                this.team_winner = 1;
+                this.team1_points = 4;
+                this.team2_points = -4;
+            }
+        }
+    }
+
 }
 
 module.exports = Sueca;

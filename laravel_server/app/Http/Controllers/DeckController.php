@@ -137,4 +137,9 @@ class DeckController extends Controller
         return response()->json("Deck Created", 200);
     }
 
+    public function getSomeDeck(Request $request)
+    {
+        return response()->json('chupa-mos', 200);
+    }
+
 }

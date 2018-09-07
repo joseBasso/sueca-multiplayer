@@ -13,15 +13,6 @@
                     <img v-bind:src="'storage/' + base_path + game.cardTrump.path" height="150">
                 </div>
 
-                <v-container>
-                    <h4>Board</h4>
-                    <h6>It's {{game.players[game.turn-1].playerNickname}} Turn!!</h6>
-
-                    <div>
-                        <img v-for="(card,index) in game.boardCards" v-bind:src="'storage/' + base_path + card.path" height="100">
-                    </div>
-                </v-container>
-
                 <v-container grid-list>
                     <v-layout row wrap>
                         <v-flex>
@@ -53,6 +44,16 @@
                                     </div>
                                 </v-card>
 
+                            </v-container>
+                            <br/>
+                            <v-container>
+                                <h4>Board</h4>
+                                <h6>It's {{game.players[game.turn-1].playerNickname}} Turn!!</h6>
+                                <v-btn xs @click.native="reportRenounce(game)">Report Renounce</v-btn>
+
+                                <div>
+                                    <img v-for="(card,index) in game.boardCards" v-bind:src="'storage/' + base_path + card.path" height="100">
+                                </div>
                             </v-container>
                             <br/>
                             <v-container class="elevation-1">
@@ -127,21 +128,43 @@
                 let auxGame = game;
                 let playerIndex = auxGame.players.findIndex(p => p.id === this.currentPlayer.id);
                 let playerTeam = 0;
-                if (playerIndex == 0 || playerIndex == 2){
+                if (playerIndex === 0 || playerIndex === 2){
+                    playerTeam = 1;
+                } else {
+                    playerTeam = 2;
+                }
+
+                if (playerTeam === game.team_winner){
+                    this.message = 'You won a game!'
+                } else {
+                    this.message = 'You lost a game.'
+                }
+                this.showMessage = true;
+            },
+            renounce_confirmed(game){
+                let auxGame = game;
+                let playerIndex = auxGame.players.findIndex(p => p.id === this.currentPlayer.id);
+                let playerTeam = 0;
+                if (playerIndex === 0 || playerIndex === 2){
                     playerTeam = 1;
                 } else {
                     playerTeam = 2;
                 }
 
                 if (playerTeam == game.team_winner){
-                    this.message = 'You won a game!'
+                    this.message = 'You won due to a renounce report';
                 } else {
-                    this.message = 'You lost a game.'
+                    this.message = 'You lost due to a renounce report';
                 }
                 this.showMessage = true;
             }
         },
         methods: {
+            reportRenounce: function(game){
+              if (!game.gameEnded) {
+                  this.$socket.emit('report_renounce', {gameId: game.gameID, player: this.currentPlayer.id});
+              }
+            },
             clicked: function(game, card){
               if (!game.gameEnded){
                   this.$socket.emit('play_card', {gameId: game.gameID, player: this.currentPlayer.id, card: card});
