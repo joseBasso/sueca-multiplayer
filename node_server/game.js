@@ -1,6 +1,6 @@
 /*jshint esversion: 6 */
 var axios = require('axios');
-let url = 'http://sueca.proj/api/games';
+let url = 'http://165.227.163.12/api/games';
 
 
 class Player {
@@ -184,7 +184,7 @@ class Sueca {
 
     generateDeck() {
         let deckCards;
-        axios.get('http://sueca.proj/api/decks/1', {
+        axios.get('http://165.227.163.12/api/decks/1', {
             headers: {
                 Accept: 'application/json',
             }

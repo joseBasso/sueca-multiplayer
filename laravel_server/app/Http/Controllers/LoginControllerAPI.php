@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 
-define('YOUR_SERVER_URL', 'http://sueca.proj');
+define('YOUR_SERVER_URL', 'http://165.227.163.12');
 define('CLIENT_ID', '2');
 
 define('CLIENT_SECRET','kzurOWk14IDLBsPfF5ftx1s3f0n2LZKZ6jQupVNS');

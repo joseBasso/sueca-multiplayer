@@ -13,7 +13,7 @@ app.listen(8080, function(){
     console.log('listening on *:8080');
 });
 
-let url = 'http://sueca.proj/api/games';
+let url = 'http://165.227.163.12/api/games';
 let games = new GameList();
 
 io.on('connection', function (socket) {

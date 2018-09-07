@@ -11,11 +11,11 @@ class ConfigTableSeeder extends Seeder
      */
     public function run()
     {
-        $platform_email = 'exemplo@mail.dad';
+        $platform_email = 'suecaonlineDad@gmail.com';
         $driver = 'smtp';
-        $host = 'smtp.mailtrap.io';
-        $port = 2525;
-        $password = null;
+        $host = 'smtp.gmail.com';
+        $port = 587;
+        $password = 'suecaonline123';
         $encryption = null;
         $filesPath = 'tiles';
         $createdAt = Carbon\Carbon::now()->subMonths(2);
