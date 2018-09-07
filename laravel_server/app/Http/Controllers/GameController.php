@@ -18,12 +18,7 @@ class GameController extends Controller
         $deckList = Deck::where('active','=','1')->get();
         $decks = $deckList->pluck('id');
         $deck = null;
-        if (count($decks) > 1){
-            $deck = array_rand($decks,1);
-        }
-        else{
-            $deck = $decks[0];
-        }
+        $deck = $decks[0];
         $game->deck_used = $deck;
         $game->team1_points = 0;
         $game->team2_points = 0;
